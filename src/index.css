@@ -1,0 +1,281 @@
+@font-face {
+  font-family: 'Garet';
+  src: url('./fonts/Garet-REGULAR.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Garet';
+  src: url('./fonts/Garet-BOLD.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --orange: #fa573e;
+  --cream: #fffcf5;
+  --cream-2: #fff9ea;
+  --ink: #2e2d2d;
+  --grey: #545454;
+
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --spray: 'Rubik Spray Paint', 'DM Serif Display', sans-serif;
+  --garet: 'Garet', 'DM Sans', sans-serif;
+
+  /* set from JS: viewport width / 1366 */
+  --scale: 1;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- Artboard: fixed 1366x768 canvas scaled to viewport width ---------- */
+.artboard {
+  position: relative;
+  width: 100%;
+  height: calc(768px * var(--scale));
+  overflow: hidden;
+}
+
+.artboard__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1366px;
+  height: 768px;
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+}
+
+/* ---------- Positioned elements (desktop: absolute on the canvas) ---------- */
+.t,
+.frame,
+.logo,
+.line {
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
+  width: calc(var(--w) * 1px);
+}
+.frame,
+.logo {
+  height: calc(var(--h) * 1px);
+}
+
+/* ---------- Text ---------- */
+.t {
+  margin: 0;
+  font-weight: 400;
+  font-size: calc(var(--fs) * 1px);
+  line-height: var(--lh);
+  white-space: nowrap;
+}
+.t--wrap {
+  white-space: normal;
+}
+.t em {
+  font-style: italic;
+}
+
+.serif {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+.label {
+  font-family: var(--sans);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.135em;
+}
+
+/* ---------- Media ---------- */
+.frame {
+  overflow: hidden;
+}
+.frame > img,
+.frame > video {
+  position: absolute;
+  display: block;
+  max-width: none;
+  object-fit: fill;
+  user-select: none;
+}
+.frame--video {
+  cursor: pointer;
+  background: #000;
+}
+.sound-toggle {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.frame--video:hover .sound-toggle,
+.frame--video:focus-visible .sound-toggle,
+.frame--video.is-unmuted .sound-toggle {
+  opacity: 1;
+}
+
+.line {
+  height: 1px;
+}
+
+.logo {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #fff;
+}
+.logo img {
+  position: absolute;
+  max-width: none;
+  display: block;
+}
+
+/* Wrappers that only matter for the mobile layout */
+.group {
+  display: contents;
+}
+
+/* ---------- Mobile: Canva-style reflow into a single column ---------- */
+@media (max-width: 760px) {
+  .artboard {
+    height: auto;
+    padding: 56px 16px;
+  }
+  .artboard__canvas {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .t,
+  .frame,
+  .logo,
+  .line {
+    position: relative;
+    left: auto;
+    top: auto;
+  }
+
+  .t {
+    --m: 0.68;
+    width: 100%;
+    max-width: 100%;
+    font-size: calc(var(--fs) * var(--m) * 1px);
+    white-space: normal;
+  }
+
+  .frame {
+    align-self: center;
+    width: min(calc(var(--w) * 0.66px), 100%);
+    height: auto;
+    aspect-ratio: var(--w) / var(--h);
+  }
+  .frame--full {
+    width: 100%;
+  }
+  .frame--bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .frame--bg > img {
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+
+  .line {
+    width: min(calc(var(--w) * 1px), 100%);
+  }
+  .line--end {
+    align-self: flex-end;
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .group--list {
+    width: 54%;
+    margin-left: auto;
+  }
+  .group--logos {
+    display: grid;
+    grid-template-columns: repeat(2, 112px);
+    justify-content: center;
+    gap: 16px;
+    padding-top: 24px;
+  }
+  .group--logos .logo {
+    width: 112px;
+    height: 112px;
+  }
+  .group--logos .logo:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+  .group--reels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+}
+
+/* ---------- Reveal-on-scroll ---------- */
+.reveal {
+  opacity: 0;
+  translate: 0 24px;
+  transition:
+    opacity 0.8s ease,
+    translate 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--delay, 0ms);
+}
+.is-visible .reveal {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+}
